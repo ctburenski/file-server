@@ -12,7 +12,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "multer": "^1.4.3"
+    "file-type": "^16.5.3",
+    "multer": "^1.4.3",
+    "serve-static": "^1.14.1"
   },
   "type": "module"
 }
