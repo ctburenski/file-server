@@ -1,4 +1,6 @@
 import express from "express";
+import path from "path";
+import serveStatic from "serve-static";
 import {
   assetsMiddleware,
   prerenderedMiddleware,
@@ -19,7 +21,14 @@ app.use((req, res, next) => {
 
 app.use("/api", api);
 
-app.use("/static", express.static("user-files"));
+app.use(
+  "/static",
+  serveStatic(path.join(process.cwd(), "user-files"), {
+    cacheControl: true,
+    immutable: true,
+    maxAge: 1000 * 60 * 60 * 48,
+  })
+);
 
 app.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware);
 
