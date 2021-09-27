@@ -1,10 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
+	import { dev } from '$app/env';
 
 	let fileData;
 
+	const baseUrl = dev ? 'http://localhost:3000' : '';
+	console.log(baseUrl);
+
 	async function fileFetch() {
-		const fetchData = await fetch('http://localhost:3000/api/files');
+		const fetchData = await fetch(`${baseUrl}/api/files`);
 		const fetchJson = await fetchData.json();
 		fileData = fetchJson.files;
 	}
@@ -14,26 +18,29 @@
 	});
 
 	let fileUpload;
+	let warnUploadFile = false;
 
 	async function submitFile() {
 		if (!fileUpload) return false;
 		let fileData = new FormData();
 		fileData.append('user-file', fileUpload[0]);
-		const uploadSuccess = await fetch('http://localhost:3000/api/create', {
+		const upload = await fetch(`${baseUrl}/api/create`, {
 			method: 'POST',
 			body: fileData
 		});
+		const uploadSuccess = (await upload.json()).fileCreated;
+		console.log(uploadSuccess);
 		if (uploadSuccess) {
-			fileUpload = null;
-			// fileData = null;
 			await fileFetch();
 		}
+		fileUpload = null;
+		warnUploadFile = !uploadSuccess;
 		return uploadSuccess;
 	}
 </script>
 
 <div class="box">
-	<h1 class="title">Upload a File</h1>
+	<h1 class="title">Upload an Image or Video</h1>
 	<!-- TODO make this a beautiful fetch request that reloads the page -->
 	<form on:submit|preventDefault={submitFile}>
 		<div class="field">
@@ -50,6 +57,13 @@
 				</label>
 			</div>
 		</div>
+		{#if warnUploadFile}
+			<div class="field">
+				<div class="notification is-warning is-light">
+					Invalid file type - please only upload images or videos!
+				</div>
+			</div>
+		{/if}
 		<div class="field">
 			<div class="control">
 				<input class="button is-primary" type="submit" />
@@ -59,7 +73,7 @@
 </div>
 {#if fileData}
 	<div class="grid">
-		{#each fileData as file, i (file.fileName)}
+		{#each fileData as file (file.fileDate)}
 			<div class="card">
 				<header class="card-header">
 					<p class="card-header-title">{file.fileName.slice(file.fileName.indexOf('-') + 1)}</p>
@@ -68,10 +82,7 @@
 					{#if file.fileType === 'video'}
 						<div class="video-container">
 							<video controls>
-								<source
-									src={`http://localhost:3000/static/${file.fileName}`}
-									type={file.fileMime}
-								/>
+								<source src={`${baseUrl}/static/${file.fileName}`} type={file.fileMime} />
 								<track kind="captions" />
 							</video>
 						</div>
@@ -79,23 +90,11 @@
 						<div class="image-container">
 							<img
 								class="image"
-								src={`http://localhost:3000/static/${file.fileName}`}
+								src={`${baseUrl}/static/${file.fileName}`}
 								alt=""
 								type={file.fileMime}
 							/>
 						</div>
-						<!-- <div class="modal">
-							<div class="modal-background" />
-							<div class="model-content image-container">
-								<img
-									class="image"
-									src={`http://localhost:3000/static/${file.fileName}`}
-									alt=""
-									type={file.fileMime}
-								/>
-							</div>
-							<button class="modal-close is-large" />
-						</div> -->
 					{/if}
 				</div>
 			</div>
@@ -110,12 +109,10 @@
 
 <style>
 	.grid {
+		padding: 1rem;
 		gap: 1rem;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-	}
-	.card {
-		padding: 2rem;
 	}
 	.video-container,
 	.image-container {
