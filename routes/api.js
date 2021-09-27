@@ -5,11 +5,11 @@ const router = express.Router();
 import { userDirManager } from "./../lib/userDirManager.js";
 
 const fileManager = new userDirManager(`${process.cwd()}/user-files`);
+await fileManager.init();
 
 router.get("/files", async (req, res) => {
   res.json({
     files: fileManager.files,
-    fileHashes: [...fileManager.fileHashes.keys()],
   });
 });
 
