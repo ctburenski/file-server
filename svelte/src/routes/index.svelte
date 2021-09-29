@@ -5,7 +5,6 @@
 	let fileData;
 
 	const baseUrl = dev ? 'http://localhost:3000' : '';
-	console.log(baseUrl);
 
 	async function fileFetch() {
 		const fetchData = await fetch(`${baseUrl}/api/files`);
@@ -29,7 +28,6 @@
 			body: fileData
 		});
 		const uploadSuccess = (await upload.json()).fileCreated;
-		console.log(uploadSuccess);
 		if (uploadSuccess) {
 			await fileFetch();
 		}
@@ -41,7 +39,6 @@
 
 <div class="box">
 	<h1 class="title">Upload an Image or Video</h1>
-	<!-- TODO make this a beautiful fetch request that reloads the page -->
 	<form on:submit|preventDefault={submitFile}>
 		<div class="field">
 			<div class="file is-boxed is-primary">
