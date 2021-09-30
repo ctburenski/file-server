@@ -50,12 +50,7 @@
 	{#if warnUploadFile}
 		<p>Invalid file type - please only upload images or videos!</p>
 	{/if}
-	<button
-		type="submit"
-		class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-	>
-		Submit
-	</button>
+	<button type="submit"> Submit </button>
 </form>
 {#if fileData}
 	{#each fileData as file (file.fileDate)}
