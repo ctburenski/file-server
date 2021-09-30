@@ -11,6 +11,7 @@ import cors from "cors";
 
 const app = express();
 
+// TODO this should be dev only lol
 app.use(cors());
 app.options("*", cors());
 
