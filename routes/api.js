@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 const upload = multer();
 const router = express.Router();
-import { userDirManager } from "./../lib/userDirManager.js";
+import userDirManager from "./../lib/userDirManager.js";
 
 const fileManager = new userDirManager(`${process.cwd()}/user-files`);
 await fileManager.init();
