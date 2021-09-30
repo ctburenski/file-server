@@ -1,3 +1,4 @@
+import preprocess from 'svelte-preprocess';
 import node from '@sveltejs/adapter-node';
 
 export default {
@@ -7,5 +8,11 @@ export default {
 		// TODO do I need both of these? Pros and cons?
 		ssr: true,
 		hydrate: true
-	}
+	},
+
+	preprocess: [
+		preprocess({
+			postcss: true
+		})
+	]
 };
