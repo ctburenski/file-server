@@ -5,7 +5,7 @@ import {
   assetsMiddleware,
   prerenderedMiddleware,
   kitMiddleware,
-} from "./build/middlewares.js";
+} from "../frontend/build/middlewares.js";
 import { api } from "./routes/api.js";
 import cors from "cors";
 
