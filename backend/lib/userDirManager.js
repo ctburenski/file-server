@@ -29,7 +29,7 @@ export default class userDirManager {
   }
 
   async createFile(unsafeName, unsafeBuffer) {
-    const name = this.#validateFileName(unsafeName);
+    const name = await this.#validateFileName(unsafeName);
     const { ext, mime } = await this.#validateFileContent(unsafeBuffer);
 
     if (name && ext && this.#validateFileExt(name)) {
@@ -53,7 +53,7 @@ export default class userDirManager {
    * @param {string} unsafeName
    * @returns
    */
-  #validateFileName(unsafeName) {
+  async validateFileName(unsafeName) {
     // TODO control for length and malicious input
     const safeName = unsafeName
       .replace(/(jpeg$)|(jpg$)|(jpe$)/g, "jpg")
@@ -62,7 +62,8 @@ export default class userDirManager {
 
     // TODO this seems bad lol
     let hashString = createHash("md5").update(safeName).digest("hex");
-    for (let i = 0; !(hashString in this.fileHashes); i++) {
+    console.log(hashString);
+    for (let i = 0; hashString in this.fileHashes; i++) {
       hashString = createHash("md5")
         .update(safeName)
         .update(i.toString("16"))

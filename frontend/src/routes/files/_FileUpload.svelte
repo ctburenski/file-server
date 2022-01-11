@@ -1,21 +1,6 @@
 <script>
-	import { onMount } from 'svelte';
-	import { dev } from '$app/env';
-
-	let fileData;
-
-	const baseUrl = dev ? 'http://localhost:3000' : '';
-
-	async function fileFetch() {
-		const fetchData = await fetch(`${baseUrl}/api/files`);
-		const fetchJson = await fetchData.json();
-		fileData = fetchJson.files;
-	}
-
-	onMount(() => {
-		fileFetch();
-	});
-
+	export let fileFetch;
+	export let baseUrl;
 	let fileUpload;
 	let warnUploadFile = false;
 
@@ -52,20 +37,3 @@
 	{/if}
 	<button type="submit"> Submit </button>
 </form>
-{#if fileData}
-	{#each fileData as file (file.fileDate)}
-		<header>
-			<p>{file.fileName.slice(file.fileName.indexOf('-') + 1)}</p>
-		</header>
-		{#if file.fileType === 'video'}
-			<video controls>
-				<source src={`${baseUrl}/static/${file.fileName}`} type={file.fileMime} />
-				<track kind="captions" />
-			</video>
-		{:else if file.fileType === 'image'}
-			<img src={`${baseUrl}/static/${file.fileName}`} alt="" type={file.fileMime} />
-		{/if}
-	{/each}
-{:else}
-	<h1>Waiting to get files from server...</h1>
-{/if}

@@ -1,11 +1,11 @@
 import express from "express";
 import path from "path";
 import serveStatic from "serve-static";
-import {
-  assetsMiddleware,
-  prerenderedMiddleware,
-  kitMiddleware,
-} from "../frontend/build/middlewares.js";
+// import {
+//   assetsMiddleware,
+//   prerenderedMiddleware,
+//   kitMiddleware,
+// } from "../frontend/build/middlewares.js";
 import { api } from "./routes/api.js";
 import cors from "cors";
 
@@ -31,6 +31,6 @@ app.use(
   })
 );
 
-app.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware);
+// app.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware);
 
 app.listen(3000, () => console.log("Listening on 3000"));
